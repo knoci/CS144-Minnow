@@ -5,12 +5,29 @@
 #include <span>
 #include <string>
 
+
 using namespace std;
 
 void get_URL( const string& host, const string& path )
 {
-  cerr << "Function called: get_URL(" << host << ", " << path << ")\n";
-  cerr << "Warning: get_URL() has not been implemented yet.\n";
+  // TCPsocket建立http连接
+  auto sock = TCPSocket();
+  sock.connect(Address(host, "http"));
+  // 发送请求
+  sock.write("GET " + path + " HTTP/1.1\r\n");
+  sock.write("Host: " + host + "\r\n");
+  sock.write("Connection: close\r\n");
+  sock.write("\r\n");
+  // 关闭写端
+  sock.shutdown(SHUT_WR);
+  // 循环读端直到eof
+  while (!sock.eof()) {
+    string buffer;
+    sock.read( buffer );
+    cout << buffer;
+  }
+  // 关闭sock
+  sock.close();
 }
 
 int main( int argc, char* argv[] )
