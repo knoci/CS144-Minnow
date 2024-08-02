@@ -5,23 +5,22 @@
 #include <span>
 #include <string>
 
-
 using namespace std;
 
 void get_URL( const string& host, const string& path )
 {
   // TCPsocket建立http连接
   auto sock = TCPSocket();
-  sock.connect(Address(host, "http"));
+  sock.connect( Address( host, "http" ) );
   // 发送请求
-  sock.write("GET " + path + " HTTP/1.1\r\n");
-  sock.write("Host: " + host + "\r\n");
-  sock.write("Connection: close\r\n");
-  sock.write("\r\n");
+  sock.write( "GET " + path + " HTTP/1.1\r\n" );
+  sock.write( "Host: " + host + "\r\n" );
+  sock.write( "Connection: close\r\n" );
+  sock.write( "\r\n" );
   // 关闭写端
-  sock.shutdown(SHUT_WR);
+  sock.shutdown( SHUT_WR );
   // 循环读端直到eof
-  while (!sock.eof()) {
+  while ( !sock.eof() ) {
     string buffer;
     sock.read( buffer );
     cout << buffer;
